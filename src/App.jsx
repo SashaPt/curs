@@ -1,6 +1,17 @@
+import React from "react";
 import { galleryImages, headerIcons, inspirationImages, navLinks, products, rangeItems } from "./data";
 
-function Header() {
+function Header({ isShopPage = false }) {
+  const links = navLinks.map((link) => {
+    if (link === "Home") {
+      return { label: link, href: "#/" };
+    }
+    if (link === "Shop") {
+      return { label: link, href: "#/shop" };
+    }
+    return { label: link, href: "#" };
+  });
+
   return (
     <header className="site-header">
       <div className="container header-inner">
@@ -9,9 +20,9 @@ function Header() {
           <span>Furniro</span>
         </div>
         <nav className="main-nav">
-          {navLinks.map((link) => (
-            <a key={link} href="#">
-              {link}
+          {links.map((link) => (
+            <a key={link.label} href={link.href} className={isShopPage && link.label === "Shop" ? "active-link" : ""}>
+              {link.label}
             </a>
           ))}
         </nav>
@@ -22,6 +33,60 @@ function Header() {
         </div>
       </div>
     </header>
+  );
+}
+
+function ShopBanner() {
+  return (
+    <section className="shop-banner">
+      <div className="shop-banner-overlay">
+        <h1>Shop</h1>
+        <p>
+          Home <span>&gt;</span> Shop
+        </p>
+      </div>
+    </section>
+  );
+}
+
+function ShopToolbar() {
+  return (
+    <section className="shop-toolbar">
+      <div className="container shop-toolbar-inner">
+        <div className="shop-toolbar-left">
+          <img src="https://www.figma.com/api/mcp/asset/8f984451-8cc3-4b15-8826-7f398ab25fa0" alt="Filter" />
+          <span>Filter</span>
+          <img src="https://www.figma.com/api/mcp/asset/9bbe33ff-6058-489f-b176-6270503fec9e" alt="Grid view" />
+          <img src="https://www.figma.com/api/mcp/asset/98734713-dfd2-4002-9bbd-16bd4e352541" alt="List view" />
+          <span className="shop-divider" />
+          <p>Showing 1-16 of 32 results</p>
+        </div>
+        <div className="shop-toolbar-right">
+          <div className="toolbar-input-wrap">
+            <span>Show</span>
+            <div className="toolbar-box">16</div>
+          </div>
+          <div className="toolbar-input-wrap">
+            <span>Sort by</span>
+            <div className="toolbar-wide-box">Default</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ProductCard({ item }) {
+  return (
+    <article className="product">
+      <img src={item.image} alt={item.title} />
+      {item.badge ? <span className={`badge ${item.badge.kind}`}>{item.badge.label}</span> : null}
+      <div className="meta">
+        <h3>{item.title}</h3>
+        <p>{item.subtitle}</p>
+        <strong>{item.price}</strong>
+      </div>
+    </article>
   );
 }
 
@@ -61,15 +126,7 @@ function Products() {
       <h2>Our Products</h2>
       <div className="products-grid">
         {products.map((item) => (
-          <article key={item.title} className="product">
-            <img src={item.image} alt={item.title} />
-            {item.badge ? <span className={`badge ${item.badge.kind}`}>{item.badge.label}</span> : null}
-            <div className="meta">
-              <h3>{item.title}</h3>
-              <p>{item.subtitle}</p>
-              <strong>{item.price}</strong>
-            </div>
-          </article>
+          <ProductCard key={item.title} item={item} />
         ))}
       </div>
       <button className="ghost-btn">Show More</button>
@@ -110,7 +167,62 @@ function Gallery() {
   );
 }
 
+function ShopProducts() {
+  const shopProducts = [...products, ...products];
+
+  return (
+    <section className="shop-products container">
+      <div className="products-grid">
+        {shopProducts.map((item, index) => (
+          <ProductCard key={`${item.title}-${index}`} item={item} />
+        ))}
+      </div>
+      <div className="shop-pagination">
+        <button className="page-btn current">1</button>
+        <button className="page-btn">2</button>
+        <button className="page-btn">3</button>
+        <button className="page-btn next">Next</button>
+      </div>
+    </section>
+  );
+}
+
+function ShopFeatures() {
+  return (
+    <section className="shop-features">
+      <div className="container features-grid">
+        <article>
+          <h3>High Quality</h3>
+          <p>crafted from top materials</p>
+        </article>
+        <article>
+          <h3>Warranty Protection</h3>
+          <p>Over 2 years</p>
+        </article>
+        <article>
+          <h3>Free Shipping</h3>
+          <p>Order over 150 $</p>
+        </article>
+        <article>
+          <h3>24 / 7 Support</h3>
+          <p>Dedicated support</p>
+        </article>
+      </div>
+    </section>
+  );
+}
+
 function Footer() {
+  const links = navLinks.map((link) => {
+    if (link === "Home") {
+      return { label: link, href: "#/" };
+    }
+    if (link === "Shop") {
+      return { label: link, href: "#/shop" };
+    }
+    return { label: link, href: "#" };
+  });
+
   return (
     <footer className="site-footer">
       <div className="container foot-grid">
@@ -120,9 +232,9 @@ function Footer() {
         </div>
         <div>
           <p className="muted">Links</p>
-          {navLinks.map((link) => (
-            <a key={link} href="#">
-              {link}
+          {links.map((link) => (
+            <a key={link.label} href={link.href}>
+              {link.label}
             </a>
           ))}
         </div>
@@ -145,7 +257,7 @@ function Footer() {
   );
 }
 
-export default function App() {
+function HomePage() {
   return (
     <>
       <Header />
@@ -157,4 +269,29 @@ export default function App() {
       <Footer />
     </>
   );
+}
+
+function ShopPage() {
+  return (
+    <>
+      <Header isShopPage />
+      <ShopBanner />
+      <ShopToolbar />
+      <ShopProducts />
+      <ShopFeatures />
+      <Footer />
+    </>
+  );
+}
+
+export default function App() {
+  const [route, setRoute] = React.useState(window.location.hash || "#/");
+
+  React.useEffect(() => {
+    const handleHashChange = () => setRoute(window.location.hash || "#/");
+    window.addEventListener("hashchange", handleHashChange);
+    return () => window.removeEventListener("hashchange", handleHashChange);
+  }, []);
+
+  return route === "#/shop" ? <ShopPage /> : <HomePage />;
 }

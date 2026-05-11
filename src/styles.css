@@ -19,8 +19,72 @@ img { display: block; max-width: 100%; }
 .logo-wrap img { width: 50px; height: 32px; object-fit: contain; }
 .main-nav { display: flex; gap: 56px; }
 .main-nav a, .icons img { color: #000; text-decoration: none; font-weight: 500; }
+.main-nav a.active-link { font-weight: 700; }
 .icons { display: flex; gap: 28px; }
 .icons img { width: 23px; height: 23px; }
+.shop-banner {
+  min-height: 316px;
+  background: url("https://www.figma.com/api/mcp/asset/b5210c3a-de0c-41b5-912b-dee6b8d050c4") center/cover no-repeat;
+  display: grid;
+  place-items: center;
+}
+.shop-banner-overlay {
+  text-align: center;
+}
+.shop-banner-overlay h1 {
+  margin: 0;
+  font-size: 48px;
+  color: #000;
+}
+.shop-banner-overlay p {
+  margin: 6px 0 0;
+}
+.shop-banner-overlay span {
+  margin: 0 10px;
+}
+.shop-toolbar {
+  background: #f9f1e7;
+  padding: 22px 0;
+}
+.shop-toolbar-inner {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+.shop-toolbar-left {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+.shop-toolbar-left img {
+  width: 24px;
+  height: 24px;
+}
+.shop-divider {
+  width: 1px;
+  height: 37px;
+  background: #9f9f9f;
+}
+.shop-toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+.toolbar-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.toolbar-box,
+.toolbar-wide-box {
+  background: #fff;
+  color: #9f9f9f;
+  font-size: 20px;
+  padding: 12px 20px;
+}
+.toolbar-wide-box {
+  min-width: 188px;
+}
 .hero { min-height: 716px; background: url("https://www.figma.com/api/mcp/asset/9d1265da-86b8-4c2d-b7a4-330b0d4cf124") center/cover no-repeat; display: flex; align-items: center; justify-content: flex-end; padding: 0 8vw; }
 .hero-card { width: min(640px, 92vw); background: #fff3e3; padding: 60px 42px 40px; }
 .hero-label { text-transform: uppercase; letter-spacing: 3px; margin: 0; font-weight: 600; color: var(--text-main); }
@@ -42,6 +106,50 @@ h2 { margin: 0 0 8px; text-align: center; font-size: 40px; color: var(--text-dar
 .badge.sale { background: #e97171; }
 .badge.new { background: #2ec1ac; }
 .ghost-btn { display: block; margin: 32px auto 0; border: 1px solid var(--primary); color: var(--primary); background: #fff; padding: 12px 74px; font-weight: 600; }
+.shop-products {
+  padding-top: 46px;
+  padding-bottom: 84px;
+}
+.shop-pagination {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-top: 72px;
+}
+.page-btn {
+  border: 0;
+  background: #f9f1e7;
+  min-width: 60px;
+  height: 60px;
+  border-radius: 10px;
+  font-size: 20px;
+}
+.page-btn.current {
+  background: var(--primary);
+  color: #fff;
+}
+.page-btn.next {
+  min-width: 98px;
+}
+.shop-features {
+  background: #faf3ea;
+  padding: 100px 0;
+}
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+.features-grid h3 {
+  margin: 0;
+  color: #242424;
+  font-size: 25px;
+}
+.features-grid p {
+  margin: 8px 0 0;
+  color: #898989;
+  font-size: 20px;
+}
 .inspiration { background: var(--bg-warm); }
 .insp-wrap { display: grid; grid-template-columns: 1.1fr 2fr; gap: 38px; align-items: center; }
 .insp-wrap h2, .inspiration p { text-align: left; }
@@ -62,11 +170,24 @@ h2 { margin: 0 0 8px; text-align: center; font-size: 40px; color: var(--text-dar
   .products-grid { grid-template-columns: repeat(2, 1fr); }
   .masonry { grid-template-columns: repeat(2, 1fr); }
   .foot-grid { grid-template-columns: repeat(2, 1fr); }
+  .features-grid { grid-template-columns: repeat(2, 1fr); }
+  .shop-toolbar-inner { flex-direction: column; align-items: flex-start; }
 }
 @media (max-width: 700px) {
   .header-inner { min-height: auto; padding: 18px 0; flex-wrap: wrap; gap: 14px; }
   .logo-wrap { font-size: 26px; }
   .main-nav { width: 100%; justify-content: space-between; gap: 8px; }
+  .shop-toolbar-left {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .shop-toolbar-right {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
   .range-grid, .products-grid, .insp-wrap, .insp-images, .foot-grid, .masonry { grid-template-columns: 1fr; }
   h2 { font-size: 30px; }
 }
