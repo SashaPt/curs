@@ -1,40 +1,5 @@
 import React, { useState } from "react";
-import { products, navLinks, headerIcons } from "./data";
-
-function Header({ isShopPage = false }) {
-  const links = navLinks.map((link) => {
-    if (link === "Home") {
-      return { label: link, href: "#/" };
-    }
-    if (link === "Shop") {
-      return { label: link, href: "#/shop" };
-    }
-    return { label: link, href: "#" };
-  });
-
-  return (
-    <header className="site-header">
-      <div className="container header-inner">
-        <div className="logo-wrap">
-          <img src="https://www.figma.com/api/mcp/asset/d2ede427-e9fe-4620-8016-d40c6ea41779" alt="Furniro icon" />
-          <span>Furniro</span>
-        </div>
-        <nav className="main-nav">
-          {links.map((link) => (
-            <a key={link.label} href={link.href} className={isShopPage && link.label === "Shop" ? "active-link" : ""}>
-              {link.label}
-            </a>
-          ))}
-        </nav>
-        <div className="icons">
-          {headerIcons.map((icon) => (
-            <img key={icon.alt} src={icon.src} alt={icon.alt} />
-          ))}
-        </div>
-      </div>
-    </header>
-  );
-}
+import { products } from "./data";
 
 function Breadcrumb() {
   return (
@@ -42,7 +7,7 @@ function Breadcrumb() {
       <div className="container breadcrumb-inner">
         <div className="breadcrumb-nav">
           <span>Home</span>
-          <img src="https://www.figma.com/api/mcp/asset/98734713-dfd2-4002-9bbd-16bd4e352541" alt="Arrow" className="breadcrumb-arrow" />
+          <img src="/images/products/arrow-right.png" alt="Arrow" className="breadcrumb-arrow" />
           <span>Shop</span>
         </div>
       </div>
@@ -54,10 +19,10 @@ function ProductGallery() {
   const [selectedImage, setSelectedImage] = useState(0);
   
   const images = [
-    "https://www.figma.com/api/mcp/asset/59b0b796-20a4-4ef4-a89e-f9ded5b05c9d",
-    "https://www.figma.com/api/mcp/asset/75ded21d-8eee-420d-9c8b-a70fadebbac0",
-    "https://www.figma.com/api/mcp/asset/56b5a760-82b7-44de-84e9-9177871c512b",
-    "https://www.figma.com/api/mcp/asset/628cd569-d3e6-4a82-b273-27e6bbb7643d"
+    "/images/products/product-1.png",
+    "/images/products/product-2.png",
+    "/images/products/product-3.png",
+    "/images/products/product-4.png"
   ];
 
   return (
@@ -232,55 +197,9 @@ function ShopFeatures() {
   );
 }
 
-function Footer() {
-  const links = navLinks.map((link) => {
-    if (link === "Home") {
-      return { label: link, href: "#/" };
-    }
-    if (link === "Shop") {
-      return { label: link, href: "#/shop" };
-    }
-    return { label: link, href: "#" };
-  });
-
-  return (
-    <footer className="site-footer">
-      <div className="container foot-grid">
-        <div>
-          <h3>Funiro.</h3>
-          <p>400 University Drive Suite 200 Coral Gables, FL 33134 USA</p>
-        </div>
-        <div>
-          <p className="muted">Links</p>
-          {links.map((link) => (
-            <a key={link.label} href={link.href}>
-              {link.label}
-            </a>
-          ))}
-        </div>
-        <div>
-          <p className="muted">Help</p>
-          <a href="#">Payment Options</a>
-          <a href="#">Returns</a>
-          <a href="#">Privacy Policies</a>
-        </div>
-        <div>
-          <p className="muted">Newsletter</p>
-          <div className="newsletter">
-            <input placeholder="Enter Your Email Address" />
-            <button>SUBSCRIBE</button>
-          </div>
-        </div>
-      </div>
-      <div className="container copyright">2023 furino. All rights reserved</div>
-    </footer>
-  );
-}
-
 export default function SingleProductPage() {
   return (
     <>
-      <Header />
       <Breadcrumb />
       <section className="product-detail">
         <div className="container product-detail-inner">
@@ -290,7 +209,6 @@ export default function SingleProductPage() {
       </section>
       <RelatedProducts />
       <ShopFeatures />
-      <Footer />
     </>
   );
 }
