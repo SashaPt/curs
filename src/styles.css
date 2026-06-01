@@ -24,7 +24,7 @@ img { display: block; max-width: 100%; }
 .icons img { width: 23px; height: 23px; }
 .shop-banner {
   min-height: 316px;
-  background: url("https://www.figma.com/api/mcp/asset/b5210c3a-de0c-41b5-912b-dee6b8d050c4") center/cover no-repeat;
+  background: url("/images/shop/shop-banner-bg.png") center/cover no-repeat;
   display: grid;
   place-items: center;
 }
@@ -85,7 +85,7 @@ img { display: block; max-width: 100%; }
 .toolbar-wide-box {
   min-width: 188px;
 }
-.hero { min-height: 716px; background: url("https://www.figma.com/api/mcp/asset/9d1265da-86b8-4c2d-b7a4-330b0d4cf124") center/cover no-repeat; display: flex; align-items: center; justify-content: flex-end; padding: 0 8vw; }
+.hero { min-height: 716px; background: url("/images/home/hero-bg.png") center/cover no-repeat; display: flex; align-items: center; justify-content: flex-end; padding: 0 8vw; }
 .hero-card { width: min(640px, 92vw); background: #fff3e3; padding: 60px 42px 40px; }
 .hero-label { text-transform: uppercase; letter-spacing: 3px; margin: 0; font-weight: 600; color: var(--text-main); }
 .hero h1 { margin: 8px 0 16px; color: var(--primary); font-size: clamp(32px, 5vw, 52px); line-height: 1.2; }
