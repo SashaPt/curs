@@ -1,5 +1,6 @@
 import React from "react";
 import { galleryImages, headerIcons, inspirationImages, navLinks, products, rangeItems } from "./data";
+import SingleProductPage from "./SingleProduct";
 
 function Header({ isShopPage = false }) {
   const links = navLinks.map((link) => {
@@ -284,6 +285,15 @@ function ShopPage() {
   );
 }
 
+function ProductDetailPage() {
+  return (
+    <>
+      <Header />
+      <SingleProductPage />
+    </>
+  );
+}
+
 export default function App() {
   const [route, setRoute] = React.useState(window.location.hash || "#/");
 
@@ -293,5 +303,5 @@ export default function App() {
     return () => window.removeEventListener("hashchange", handleHashChange);
   }, []);
 
-  return route === "#/shop" ? <ShopPage /> : <HomePage />;
+  return route === "#/shop" ? <ShopPage /> : route === "#/product" ? <ProductDetailPage /> : <HomePage />;
 }
