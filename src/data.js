@@ -1,10 +1,10 @@
 export const navLinks = ["Home", "Shop", "About", "Contact"];
 
 export const headerIcons = [
-  { alt: "Account", src: "/images/common/account-icon.png" },
-  { alt: "Search", src: "/images/common/search-icon.png" },
-  { alt: "Wishlist", src: "/images/common/wishlist-icon.png" },
-  { alt: "Cart", src: "/images/common/cart-icon.png" }
+  { alt: "Account", src: "/images/common/account-icon.svg" },
+  { alt: "Search", src: "/images/common/search-icon.svg" },
+  { alt: "Wishlist", src: "/images/common/wishlist-icon.svg" },
+  { alt: "Cart", src: "/images/common/cart-icon.svg" }
 ];
 
 export const rangeItems = [
