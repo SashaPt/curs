@@ -1,5 +1,5 @@
 import React from "react";
-import { products } from "./data";
+import { products } from "../data";
 
 function ShopBanner() {
   return (
@@ -19,10 +19,10 @@ function ShopToolbar() {
     <section className="shop-toolbar">
       <div className="container shop-toolbar-inner">
         <div className="shop-toolbar-left">
-          <img src="/images/common/filter-icon.png" alt="Filter" />
+          <img src="/curs/images/common/filter-icon.png" alt="Filter" />
           <span>Filter</span>
-          <img src="/images/common/grid-view-icon.png" alt="Grid view" />
-          <img src="/images/common/list-view-icon.png" alt="List view" />
+          <img src="/curs/images/common/grid-view-icon.png" alt="Grid view" />
+          <img src="/curs/images/common/list-view-icon.png" alt="List view" />
           <span className="shop-divider" />
           <p>Showing 1-16 of 32 results</p>
         </div>
