@@ -88,16 +88,7 @@ export const products = [
 
 export const inspirationImages = [
   "/curs/images/home/inspiration-1.png",
-  "/curs/images/home/inspiration-2.png",
-  "/curs/images/home/gallery-1.png",
-  "/curs/images/home/gallery-2.png",
-  "/curs/images/home/gallery-3.png",
-  "/curs/images/home/gallery-4.png",
-  "/curs/images/home/gallery-5.png",
-  "/curs/images/home/gallery-6.png",
-  "/curs/images/home/gallery-7.png",
-  "/curs/images/home/gallery-8.png",
-  "/curs/images/home/gallery-9.png"
+  "/curs/images/home/inspiration-2.png"
 ];
 
 export const galleryImages = [

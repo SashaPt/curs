@@ -1,23 +1,43 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { galleryImages, inspirationImages, rangeItems, products } from "../data";
+import { galleryImages, inspirationImages } from "../data";
 import Features from "../components/Features";
 import ProductCard from "../components/ProductCard";
+import { useProducts } from "../context/ProductsContext";
 
 function Hero() {
+  const [heroContent, setHeroContent] = useState(null);
+
+  useEffect(() => {
+    fetch('/api/content/homepage')
+      .then(res => res.json())
+      .then(data => {
+        const hero = data.find(s => s.section === 'hero');
+        if (hero) setHeroContent(hero);
+      })
+      .catch(console.error);
+  }, []);
+
   return (
     <section className="hero">
       <div className="hero-card">
-        <p className="hero-label">New arrival</p>
-        <h1>Discover Our New Collection</h1>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis.</p>
-        <Link to="/shop" className="button">BUY NOW</Link>
+        <p className="hero-label">{heroContent?.subtitle || 'New arrival'}</p>
+        <h1>{heroContent?.title || 'Discover Our New Collection'}</h1>
+        <p>{heroContent?.description || 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis.'}</p>
+        <Link to={heroContent?.link || '/shop'} className="button">{heroContent?.link_text || 'BUY NOW'}</Link>
       </div>
     </section>
   );
 }
 
 function Range() {
+  const { products } = useProducts();
+  const rangeItems = [
+    { title: "Dining", category: "dining", image: "/curs/images/home/range-dining.png" },
+    { title: "Living", category: "living", image: "/curs/images/home/range-living.png" },
+    { title: "Bedroom", category: "bedroom", image: "/curs/images/home/range-bedroom.png" }
+  ];
+
   return (
     <section className="range container">
       <h2>Browse The Range</h2>
@@ -45,15 +65,39 @@ function Range() {
 }
 
 function Products() {
+  const { products, loading } = useProducts();
+  const [displayCount, setDisplayCount] = useState(8);
+
+  if (loading) {
+    return (
+      <section className="products container">
+        <h2>Our Products</h2>
+        <div className="products-grid">
+          {[1, 2, 3, 4, 5, 6, 7, 8].map(i => (
+            <div key={i} className="product skeleton">
+              <div className="skeleton-image"></div>
+              <div className="skeleton-text"></div>
+              <div className="skeleton-text short"></div>
+            </div>
+          ))}
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="products container">
       <h2>Our Products</h2>
       <div className="products-grid">
-        {products.map((item) => (
-          <ProductCard key={item.title} item={item} />
+        {products.slice(0, displayCount).map((item) => (
+          <ProductCard key={item.id} item={item} />
         ))}
       </div>
-      <button className="ghost-btn">Show More</button>
+      {products.length > displayCount && (
+        <button className="ghost-btn" onClick={() => setDisplayCount(displayCount + 8)}>
+          Show More
+        </button>
+      )}
     </section>
   );
 }

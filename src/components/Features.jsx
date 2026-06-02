@@ -1,25 +1,43 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 export default function Features() {
+  const [features, setFeatures] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch('/api/content/features')
+      .then(res => res.json())
+      .then(data => {
+        setFeatures(data);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
+
+  if (loading) {
+    return (
+      <section className="shop-features">
+        <div className="container features-grid">
+          {[1, 2, 3, 4].map(i => (
+            <article key={i} className="skeleton-feature">
+              <div className="skeleton-title"></div>
+              <div className="skeleton-text"></div>
+            </article>
+          ))}
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="shop-features">
       <div className="container features-grid">
-        <article>
-          <h3>High Quality</h3>
-          <p>crafted from top materials</p>
-        </article>
-        <article>
-          <h3>Warranty Protection</h3>
-          <p>Over 2 years</p>
-        </article>
-        <article>
-          <h3>Free Shipping</h3>
-          <p>Order over 150 $</p>
-        </article>
-        <article>
-          <h3>24 / 7 Support</h3>
-          <p>Dedicated support</p>
-        </article>
+        {features.map((feature, index) => (
+          <article key={feature.id || index}>
+            <h3>{feature.title}</h3>
+            <p>{feature.description}</p>
+          </article>
+        ))}
       </div>
     </section>
   );
