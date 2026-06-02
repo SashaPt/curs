@@ -1,25 +1,28 @@
 import React, { useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import { products } from "../data";
+import Features from "../components/Features";
+import Breadcrumbs from "../components/Breadcrumbs";
 
 function Breadcrumb() {
-  return (
-    <section className="breadcrumb">
-      <div className="container breadcrumb-inner">
-        <div className="breadcrumb-nav">
-          <span>Home</span>
-          <img src="/curs/images/products/arrow-right.png" alt="Arrow" className="breadcrumb-arrow" />
-          <span>Shop</span>
-        </div>
-      </div>
-    </section>
-  );
+  const params = useParams();
+  const product = products.find(p => p.id === parseInt(params.id));
+  
+  const breadcrumbs = [
+    { label: "Home", path: "/" },
+    { label: "Shop", path: "/shop" },
+    { label: product?.title || "Product" }
+  ];
+
+  return <Breadcrumbs items={breadcrumbs} />;
 }
 
-function ProductGallery() {
+function ProductGallery({ product }) {
   const [selectedImage, setSelectedImage] = useState(0);
   
+  // Use product image as main, add placeholders for gallery
   const images = [
-    "/curs/images/products/product-1.png",
+    product.image,
     "/curs/images/products/product-2.png",
     "/curs/images/products/product-3.png",
     "/curs/images/products/product-4.png"
@@ -45,14 +48,14 @@ function ProductGallery() {
   );
 }
 
-function ProductInfo() {
+function ProductInfo({ product }) {
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState("description");
 
   return (
     <div className="product-info">
-      <h1 className="product-title">Syltherine</h1>
-      <p className="product-price">Rp 2.500.000</p>
+      <h1 className="product-title">{product.title}</h1>
+      <p className="product-price">{product.price}</p>
       
       <div className="product-rating">
         <div className="stars">★★★★★</div>
@@ -60,7 +63,7 @@ function ProductInfo() {
       </div>
 
       <p className="product-description">
-        Embodying the raw, wayward spirit of rock 'n' roll, the Kilburn portable active stereo speaker takes the unmistakable look and sound of Marshall, unplugs the chords, and takes the show on the road.
+        {product.subtitle}. Embodying the raw, wayward spirit of rock 'n' roll, the Kilburn portable active stereo speaker takes the unmistakable look and sound of Marshall, unplugs the chords, and takes the show on the road.
       </p>
 
       <div className="product-options">
@@ -147,8 +150,10 @@ function ProductInfo() {
 function ProductCard({ item }) {
   return (
     <article className="product">
-      <img src={item.image} alt={item.title} />
-      {item.badge ? <span className={`badge ${item.badge.kind}`}>{item.badge.label}</span> : null}
+      <Link to={`/product/${item.id}`}>
+        <img src={item.image} alt={item.title} />
+      </Link>
+      {item.badge && <span className={`badge ${item.badge.kind}`}>{item.badge.label}</span>}
       <div className="meta">
         <h3>{item.title}</h3>
         <p>{item.subtitle}</p>
@@ -172,43 +177,32 @@ function RelatedProducts() {
   );
 }
 
-function ShopFeatures() {
-  return (
-    <section className="shop-features">
-      <div className="container features-grid">
-        <article>
-          <h3>High Quality</h3>
-          <p>crafted from top materials</p>
-        </article>
-        <article>
-          <h3>Warranty Protection</h3>
-          <p>Over 2 years</p>
-        </article>
-        <article>
-          <h3>Free Shipping</h3>
-          <p>Order over 150 $</p>
-        </article>
-        <article>
-          <h3>24 / 7 Support</h3>
-          <p>Dedicated support</p>
-        </article>
-      </div>
-    </section>
-  );
-}
+
 
 export default function SingleProductPage() {
+  const params = useParams();
+  const product = products.find(p => p.id === parseInt(params.id));
+
+  if (!product) {
+    return (
+      <div className="container">
+        <h1>Product not found</h1>
+        <Link to="/shop">Back to Shop</Link>
+      </div>
+    );
+  }
+
   return (
     <>
       <Breadcrumb />
       <section className="product-detail">
         <div className="container product-detail-inner">
-          <ProductGallery />
-          <ProductInfo />
+          <ProductGallery product={product} />
+          <ProductInfo product={product} />
         </div>
       </section>
       <RelatedProducts />
-      <ShopFeatures />
+      <Features />
     </>
   );
 }

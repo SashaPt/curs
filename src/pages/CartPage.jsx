@@ -1,14 +1,19 @@
 import React, { useState } from "react";
 import { products } from "../data";
+import Features from "../components/Features";
+import Breadcrumbs from "../components/Breadcrumbs";
 
 function CartBanner() {
+  const breadcrumbs = [
+    { label: "Home", path: "/" },
+    { label: "Cart" }
+  ];
+
   return (
     <section className="cart-banner">
       <div className="cart-banner-overlay">
         <h1>Cart</h1>
-        <p>
-          Home <span>&gt;</span> Cart
-        </p>
+        <Breadcrumbs items={breadcrumbs} inline />
       </div>
     </section>
   );
@@ -85,31 +90,6 @@ function CartTotals() {
   );
 }
 
-function CartFeatures() {
-  return (
-    <section className="cart-features">
-      <div className="container features-grid">
-        <article>
-          <h3>High Quality</h3>
-          <p>crafted from top materials</p>
-        </article>
-        <article>
-          <h3>Warranty Protection</h3>
-          <p>Over 2 years</p>
-        </article>
-        <article>
-          <h3>Free Shipping</h3>
-          <p>Order over 150 $</p>
-        </article>
-        <article>
-          <h3>24 / 7 Support</h3>
-          <p>Dedicated support</p>
-        </article>
-      </div>
-    </section>
-  );
-}
-
 export default function CartPage() {
   const [cartItems, setCartItems] = useState([
     { product: products[0], quantity: 1 },
@@ -145,7 +125,7 @@ export default function CartPage() {
           <CartTotals />
         </div>
       </section>
-      <CartFeatures />
+      <Features />
     </>
   );
 }

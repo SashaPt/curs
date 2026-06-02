@@ -1,14 +1,21 @@
 import React from "react";
+import { useSearchParams } from "react-router-dom";
 import { products } from "../data";
+import Features from "../components/Features";
+import Breadcrumbs from "../components/Breadcrumbs";
+import ProductCard from "../components/ProductCard";
 
 function ShopBanner() {
+  const breadcrumbs = [
+    { label: "Home", path: "/" },
+    { label: "Shop" }
+  ];
+
   return (
     <section className="shop-banner">
       <div className="shop-banner-overlay">
         <h1>Shop</h1>
-        <p>
-          Home <span>&gt;</span> Shop
-        </p>
+        <Breadcrumbs items={breadcrumbs} inline />
       </div>
     </section>
   );
@@ -41,28 +48,16 @@ function ShopToolbar() {
   );
 }
 
-function ProductCard({ item }) {
-  return (
-    <article className="product">
-      <img src={item.image} alt={item.title} />
-      {item.badge ? <span className={`badge ${item.badge.kind}`}>{item.badge.label}</span> : null}
-      <div className="meta">
-        <h3>{item.title}</h3>
-        <p>{item.subtitle}</p>
-        <strong>{item.price}</strong>
-      </div>
-    </article>
-  );
-}
-
-function ShopProducts() {
-  const shopProducts = [...products, ...products];
+function ShopProducts({ category }) {
+  const filteredProducts = category
+    ? products.filter((product) => product.category === category)
+    : [...products, ...products];
 
   return (
     <section className="shop-products container">
       <div className="products-grid">
-        {shopProducts.map((item, index) => (
-          <ProductCard key={`${item.title}-${index}`} item={item} />
+        {filteredProducts.map((item, index) => (
+          <ProductCard key={`${item.id || item.title}-${index}`} item={item} />
         ))}
       </div>
       <div className="shop-pagination">
@@ -75,38 +70,16 @@ function ShopProducts() {
   );
 }
 
-function ShopFeatures() {
-  return (
-    <section className="shop-features">
-      <div className="container features-grid">
-        <article>
-          <h3>High Quality</h3>
-          <p>crafted from top materials</p>
-        </article>
-        <article>
-          <h3>Warranty Protection</h3>
-          <p>Over 2 years</p>
-        </article>
-        <article>
-          <h3>Free Shipping</h3>
-          <p>Order over 150 $</p>
-        </article>
-        <article>
-          <h3>24 / 7 Support</h3>
-          <p>Dedicated support</p>
-        </article>
-      </div>
-    </section>
-  );
-}
-
 export default function ShopPage() {
+  const [searchParams] = useSearchParams();
+  const category = searchParams.get("category");
+
   return (
     <>
       <ShopBanner />
       <ShopToolbar />
-      <ShopProducts />
-      <ShopFeatures />
+      <ShopProducts category={category} />
+      <Features />
     </>
   );
 }

@@ -1,5 +1,8 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { galleryImages, inspirationImages, rangeItems, products } from "../data";
+import Features from "../components/Features";
+import ProductCard from "../components/ProductCard";
 
 function Hero() {
   return (
@@ -8,7 +11,7 @@ function Hero() {
         <p className="hero-label">New arrival</p>
         <h1>Discover Our New Collection</h1>
         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis.</p>
-        <button>BUY NOW</button>
+        <Link to="/shop" className="button">BUY NOW</Link>
       </div>
     </section>
   );
@@ -20,28 +23,24 @@ function Range() {
       <h2>Browse The Range</h2>
       <p className="subtitle">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
       <div className="range-grid">
-        {rangeItems.map((item) => (
-          <article key={item.title}>
-            <img src={item.image} alt={item.title} />
-            <h3>{item.title}</h3>
-          </article>
-        ))}
+        {rangeItems.map((item) => {
+          const categoryProducts = products.filter((p) => p.category === item.category);
+          return (
+            <Link key={item.title} to={`/shop?category=${item.category}`} className="range-card">
+              <div className="range-card-image">
+                <img src={item.image} alt={item.title} />
+                {categoryProducts.length > 0 && (
+                  <span className="range-count">{categoryProducts.length} products</span>
+                )}
+              </div>
+              <div className="range-card-meta">
+                <h3>{item.title}</h3>
+              </div>
+            </Link>
+          );
+        })}
       </div>
     </section>
-  );
-}
-
-function ProductCard({ item }) {
-  return (
-    <article className="product">
-      <img src={item.image} alt={item.title} />
-      {item.badge ? <span className={`badge ${item.badge.kind}`}>{item.badge.label}</span> : null}
-      <div className="meta">
-        <h3>{item.title}</h3>
-        <p>{item.subtitle}</p>
-        <strong>{item.price}</strong>
-      </div>
-    </article>
   );
 }
 
@@ -60,20 +59,107 @@ function Products() {
 }
 
 function Inspiration() {
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
+
+  const slidesPerView = 2;
+  const totalSlides = Math.ceil(inspirationImages.length / slidesPerView);
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % totalSlides);
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + totalSlides) % totalSlides);
+  };
+
+  const openLightbox = (index) => {
+    setLightboxIndex(index);
+    setLightboxOpen(true);
+  };
+
+  const closeLightbox = () => {
+    setLightboxOpen(false);
+  };
+
+  const nextLightbox = () => {
+    setLightboxIndex((prev) => (prev + 1) % inspirationImages.length);
+  };
+
+  const prevLightbox = () => {
+    setLightboxIndex((prev) => (prev - 1 + inspirationImages.length) % inspirationImages.length);
+  };
+
+  const goToSlide = (index) => {
+    setCurrentSlide(index);
+  };
+
   return (
     <section className="inspiration">
       <div className="container insp-wrap">
-        <div>
+        <div className="insp-content">
           <h2>50+ Beautiful rooms inspiration</h2>
           <p>Our designer already made a lot of beautiful prototipe of rooms that inspire you</p>
-          <button>Explore More</button>
+          <button className="button" onClick={() => openLightbox(0)}>Explore More</button>
         </div>
-        <div className="insp-images">
-          {inspirationImages.map((image, index) => (
-            <img key={image} src={image} alt={`Room inspiration ${index + 1}`} />
-          ))}
+        <div className="insp-slider">
+          <div className="insp-slider-wrapper" style={{ transform: `translateX(-${currentSlide * 100}%)` }}>
+            {Array.from({ length: totalSlides }).map((_, slideIndex) => (
+              <div key={slideIndex} className="insp-slide">
+                {inspirationImages.slice(slideIndex * slidesPerView, (slideIndex + 1) * slidesPerView).map((image, index) => {
+                  const globalIndex = slideIndex * slidesPerView + index;
+                  return (
+                    <div key={image} className="insp-image-wrap" onClick={() => openLightbox(globalIndex)}>
+                      <img src={image} alt={`Room inspiration ${globalIndex + 1}`} />
+                    </div>
+                  );
+                })}
+              </div>
+            ))}
+          </div>
+          <button className="slider-btn slider-btn-prev" onClick={prevSlide}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
+          <button className="slider-btn slider-btn-next" onClick={nextSlide}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M9 6L15 12L9 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
+          <div className="slider-pagination">
+            {Array.from({ length: totalSlides }).map((_, index) => (
+              <span
+                key={index}
+                className={`pagination-dot ${index === currentSlide ? 'active' : ''}`}
+                onClick={() => goToSlide(index)}
+              />
+            ))}
+          </div>
         </div>
       </div>
+      {lightboxOpen && (
+        <div className="lightbox" onClick={closeLightbox}>
+          <button className="lightbox-close" onClick={closeLightbox}>×</button>
+          <button className="lightbox-btn lightbox-btn-prev" onClick={(e) => { e.stopPropagation(); prevLightbox(); }}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
+          <div className="lightbox-content" onClick={(e) => e.stopPropagation()}>
+            <img src={inspirationImages[lightboxIndex]} alt={`Room ${lightboxIndex + 1}`} />
+          </div>
+          <button className="lightbox-btn lightbox-btn-next" onClick={(e) => { e.stopPropagation(); nextLightbox(); }}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M9 6L15 12L9 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
+          <div className="lightbox-counter">
+            {lightboxIndex + 1} / {inspirationImages.length}
+          </div>
+        </div>
+      )}
     </section>
   );
 }
@@ -100,6 +186,7 @@ export default function HomePage() {
       <Products />
       <Inspiration />
       <Gallery />
+      <Features />
     </>
   );
 }
