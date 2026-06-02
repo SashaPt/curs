@@ -1,19 +1,13 @@
 import React from "react";
+import { BrowserRouter, Routes, Route, Link, useLocation } from "react-router-dom";
 import { navLinks, headerIcons } from "./data";
 import HomePage from "./HomePage";
 import ShopPage from "./ShopPage";
 import SingleProductPage from "./SingleProduct";
 
-function Header({ isShopPage = false }) {
-  const links = navLinks.map((link) => {
-    if (link === "Home") {
-      return { label: link, href: "#/" };
-    }
-    if (link === "Shop") {
-      return { label: link, href: "#/shop" };
-    }
-    return { label: link, href: "#" };
-  });
+function Header() {
+  const location = useLocation();
+  const isShopPage = location.pathname === "/shop";
 
   return (
     <header className="site-header">
@@ -23,11 +17,8 @@ function Header({ isShopPage = false }) {
           <span>Furniro</span>
         </div>
         <nav className="main-nav">
-          {links.map((link) => (
-            <a key={link.label} href={link.href} className={isShopPage && link.label === "Shop" ? "active-link" : ""}>
-              {link.label}
-            </a>
-          ))}
+          <Link to="/" className={location.pathname === "/" ? "active-link" : ""}>Home</Link>
+          <Link to="/shop" className={isShopPage ? "active-link" : ""}>Shop</Link>
         </nav>
         <div className="icons">
           {headerIcons.map((icon) => (
@@ -40,16 +31,6 @@ function Header({ isShopPage = false }) {
 }
 
 function Footer() {
-  const links = navLinks.map((link) => {
-    if (link === "Home") {
-      return { label: link, href: "#/" };
-    }
-    if (link === "Shop") {
-      return { label: link, href: "#/shop" };
-    }
-    return { label: link, href: "#" };
-  });
-
   return (
     <footer className="site-footer">
       <div className="container foot-grid">
@@ -59,11 +40,8 @@ function Footer() {
         </div>
         <div>
           <p className="muted">Links</p>
-          {links.map((link) => (
-            <a key={link.label} href={link.href}>
-              {link.label}
-            </a>
-          ))}
+          <Link to="/">Home</Link>
+          <Link to="/shop">Shop</Link>
         </div>
         <div>
           <p className="muted">Help</p>
@@ -84,44 +62,14 @@ function Footer() {
   );
 }
 
-function HomePageWrapper() {
-  return (
-    <>
-      <Header />
-      <HomePage />
-      <Footer />
-    </>
-  );
-}
-
-function ShopPageWrapper() {
-  return (
-    <>
-      <Header isShopPage />
-      <ShopPage />
-      <Footer />
-    </>
-  );
-}
-
-function ProductDetailPage() {
-  return (
-    <>
-      <Header />
-      <SingleProductPage />
-      <Footer />
-    </>
-  );
-}
-
 export default function App() {
-  const [route, setRoute] = React.useState(window.location.hash || "#/");
-
-  React.useEffect(() => {
-    const handleHashChange = () => setRoute(window.location.hash || "#/");
-    window.addEventListener("hashchange", handleHashChange);
-    return () => window.removeEventListener("hashchange", handleHashChange);
-  }, []);
-
-  return route === "#/shop" ? <ShopPageWrapper /> : route === "#/product" ? <ProductDetailPage /> : <HomePageWrapper />;
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<><Header /><HomePage /><Footer /></>} />
+        <Route path="/shop" element={<><Header /><ShopPage /><Footer /></>} />
+        <Route path="/product" element={<><Header /><SingleProductPage /><Footer /></>} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
