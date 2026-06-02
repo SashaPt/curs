@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel - Furniture Store</title>
+  <link rel="stylesheet" href="/admin/styles.css">
+</head>
+<body>
+  <div class="admin-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h2>Admin Panel</h2>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="#" data-section="dashboard" class="nav-item active">Dashboard</a>
+        <a href="#" data-section="products" class="nav-item">Products</a>
+        <a href="#" data-section="categories" class="nav-item">Categories</a>
+        <a href="#" data-section="homepage" class="nav-item">Homepage</a>
+        <a href="#" data-section="features" class="nav-item">Features</a>
+        <a href="#" data-section="footer" class="nav-item">Footer</a>
+        <a href="#" data-section="settings" class="nav-item">Settings</a>
+        <a href="/" target="_blank" class="nav-item">View Site</a>
+      </nav>
+    </aside>
+    
+    <main class="main-content">
+      <header class="content-header">
+        <h1 id="page-title">Dashboard</h1>
+        <button id="add-btn" class="btn btn-primary" style="display: none;">Add New</button>
+      </header>
+      
+      <div id="content-area" class="content-area">
+        <!-- Dynamic content will be loaded here -->
+      </div>
+    </main>
+  </div>
+
+  <!-- Modal for editing -->
+  <div id="edit-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modal-title">Edit</h2>
+        <button class="modal-close">&times;</button>
+      </div>
+      <form id="edit-form">
+        <div id="modal-body"></div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary modal-cancel">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Image upload modal -->
+  <div id="image-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Upload Image</h2>
+        <button class="modal-close">&times;</button>
+      </div>
+      <form id="image-form">
+        <input type="hidden" name="folder" id="image-folder">
+        <input type="hidden" name="field" id="image-field">
+        <div class="form-group">
+          <label>Select File</label>
+          <input type="file" name="file" accept="image/*" required>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary modal-cancel">Cancel</button>
+          <button type="submit" class="btn btn-primary">Upload</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="/admin/app.js"></script>
+</body>
+</html>

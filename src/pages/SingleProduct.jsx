@@ -1,13 +1,11 @@
 import React, { useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { products } from "../data";
 import Features from "../components/Features";
 import Breadcrumbs from "../components/Breadcrumbs";
+import ProductCard from "../components/ProductCard";
+import { useProducts } from "../context/ProductsContext";
 
-function Breadcrumb() {
-  const params = useParams();
-  const product = products.find(p => p.id === parseInt(params.id));
-  
+function Breadcrumb({ product }) {
   const breadcrumbs = [
     { label: "Home", path: "/" },
     { label: "Shop", path: "/shop" },
@@ -20,13 +18,7 @@ function Breadcrumb() {
 function ProductGallery({ product }) {
   const [selectedImage, setSelectedImage] = useState(0);
   
-  // Use product image as main, add placeholders for gallery
-  const images = [
-    product.image,
-    "/curs/images/products/product-2.png",
-    "/curs/images/products/product-3.png",
-    "/curs/images/products/product-4.png"
-  ];
+  const images = [product.image];
 
   return (
     <div className="product-gallery">
@@ -57,14 +49,16 @@ function ProductInfo({ product }) {
       <h1 className="product-title">{product.title}</h1>
       <p className="product-price">{product.price}</p>
       
+      {product.originalPrice && (
+        <p className="product-original-price">{product.originalPrice}</p>
+      )}
+      
       <div className="product-rating">
         <div className="stars">★★★★★</div>
         <span className="review-count">(5 Customer Reviews)</span>
       </div>
 
-      <p className="product-description">
-        {product.subtitle}. Embodying the raw, wayward spirit of rock 'n' roll, the Kilburn portable active stereo speaker takes the unmistakable look and sound of Marshall, unplugs the chords, and takes the show on the road.
-      </p>
+      <p className="product-description">{product.description}</p>
 
       <div className="product-options">
         <div className="size-selector">
@@ -121,14 +115,7 @@ function ProductInfo({ product }) {
         <div className="tab-content">
           {activeTab === "description" && (
             <div className="tab-panel">
-              <p>
-                Weighing in under 7 pounds, the Kilburn is a lightweight piece of vintage styled engineering. 
-                Setting the bar as one of the loudest speakers in its class, the Kilburn is a compact, 
-                stout-hearted hero with a well-balanced audio which boasts a clear midrange and extended 
-                highs for a sound that is both articulate and pronounced. The analogue knobs allow you to 
-                fine tune the controls to your personal preferences while the guitar-influenced leather 
-                strap enables easy and stylish travel.
-              </p>
+              <p>{product.description}</p>
             </div>
           )}
           {activeTab === "additional" && (
@@ -147,41 +134,38 @@ function ProductInfo({ product }) {
   );
 }
 
-function ProductCard({ item }) {
-  return (
-    <article className="product">
-      <Link to={`/product/${item.id}`}>
-        <img src={item.image} alt={item.title} />
-      </Link>
-      {item.badge && <span className={`badge ${item.badge.kind}`}>{item.badge.label}</span>}
-      <div className="meta">
-        <h3>{item.title}</h3>
-        <p>{item.subtitle}</p>
-        <strong>{item.price}</strong>
-      </div>
-    </article>
-  );
-}
-
-function RelatedProducts() {
+function RelatedProducts({ currentProduct }) {
+  const { products } = useProducts();
+  
   return (
     <section className="related-products">
       <h2>Related Products</h2>
       <div className="products-grid">
-        {products.slice(0, 4).map((item) => (
-          <ProductCard key={item.title} item={item} />
-        ))}
+        {products
+          .filter(p => p.category === currentProduct.category && p.id !== currentProduct.id)
+          .slice(0, 4)
+          .map((item) => (
+            <ProductCard key={item.id} item={item} />
+          ))}
       </div>
       <button className="show-more-btn">Show More</button>
     </section>
   );
 }
 
-
-
 export default function SingleProductPage() {
   const params = useParams();
-  const product = products.find(p => p.id === parseInt(params.id));
+  const { getProductById, products, loading } = useProducts();
+  
+  const product = getProductById(params.id);
+
+  if (loading) {
+    return (
+      <div className="container">
+        <p>Loading...</p>
+      </div>
+    );
+  }
 
   if (!product) {
     return (
@@ -194,14 +178,14 @@ export default function SingleProductPage() {
 
   return (
     <>
-      <Breadcrumb />
+      <Breadcrumb product={product} />
       <section className="product-detail">
         <div className="container product-detail-inner">
           <ProductGallery product={product} />
           <ProductInfo product={product} />
         </div>
       </section>
-      <RelatedProducts />
+      <RelatedProducts currentProduct={product} />
       <Features />
     </>
   );

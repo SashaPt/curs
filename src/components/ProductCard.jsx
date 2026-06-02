@@ -56,3 +56,13 @@ export default function ProductCard({ item }) {
     </article>
   );
 }
+
+export function ProductCardSkeleton() {
+  return (
+    <article className="product skeleton">
+      <div className="skeleton-image"></div>
+      <div className="skeleton-text"></div>
+      <div className="skeleton-text short"></div>
+    </article>
+  );
+}
