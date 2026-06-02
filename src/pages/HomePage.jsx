@@ -1,5 +1,5 @@
 import React from "react";
-import { galleryImages, inspirationImages, rangeItems, products } from "./data";
+import { galleryImages, inspirationImages, rangeItems, products } from "../data";
 
 function Hero() {
   return (
