@@ -17,11 +17,10 @@ export default function Header() {
         <nav className="main-nav">
           <Link to="/" className={location.pathname === "/" ? "active-link" : ""}>Home</Link>
           <Link to="/shop" className={isShopPage ? "active-link" : ""}>Shop</Link>
-          <Link to="/cart" className={isCartPage ? "active-link" : ""}>Cart</Link>
         </nav>
         <div className="icons">
           {headerIcons.map((icon) => (
-            <Link key={icon.alt} to={icon.alt === "Cart" ? "/cart" : "#"}>
+            <Link key={icon.alt} to={icon.alt === "Search" ? "/search" : icon.alt === "Cart" ? "/cart" : "#"}>
               <img src={icon.src} alt={icon.alt} />
             </Link>
           ))}
