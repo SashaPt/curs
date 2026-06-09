@@ -1,8 +1,10 @@
 import express from 'express';
 import cors from 'cors';
+import { join } from 'path';
 import { initDatabase } from './database.js';
 import contentRoutes from './routes/content.js';
 import mediaRoutes from './routes/media.js';
+import acfRoutes from './routes/acf.js';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -11,6 +13,8 @@ const PORT = process.env.PORT || 3001;
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use('/upload', express.static(join(process.cwd(), 'upload')));
+app.use('/images', express.static(join(process.cwd(), 'public', 'images')));
 
 // Initialize database then start server
 async function startServer() {
@@ -21,6 +25,7 @@ async function startServer() {
     // Routes
     app.use('/api/content', contentRoutes);
     app.use('/api/media', mediaRoutes);
+    app.use('/api/acf', acfRoutes);
     
     // Health check
     app.get('/api/health', (req, res) => {

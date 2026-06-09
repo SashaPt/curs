@@ -1,80 +1,122 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Panel - Furniture Store</title>
+  <title>Панель управления — Furniro</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dashicons@1.0.0/dashicons.min.css">
   <link rel="stylesheet" href="/admin/styles.css">
 </head>
-<body>
-  <div class="admin-container">
-    <aside class="sidebar">
-      <div class="sidebar-header">
-        <h2>Admin Panel</h2>
-      </div>
-      <nav class="sidebar-nav">
-        <a href="#" data-section="dashboard" class="nav-item active">Dashboard</a>
-        <a href="#" data-section="products" class="nav-item">Products</a>
-        <a href="#" data-section="categories" class="nav-item">Categories</a>
-        <a href="#" data-section="homepage" class="nav-item">Homepage</a>
-        <a href="#" data-section="features" class="nav-item">Features</a>
-        <a href="#" data-section="footer" class="nav-item">Footer</a>
-        <a href="#" data-section="settings" class="nav-item">Settings</a>
-        <a href="/" target="_blank" class="nav-item">View Site</a>
-      </nav>
+<body class="wp-admin">
+  <div id="wpadminbar">
+    <div class="ab-item ab-home">
+      <span class="dashicons dashicons-wordpress"></span>
+      <strong>Furniro</strong>
+    </div>
+    <div class="ab-item ab-site">
+      <a href="/curs/" target="_blank">
+        <span class="dashicons dashicons-admin-site-alt3"></span>
+        Перейти на сайт
+      </a>
+    </div>
+    <div class="ab-item ab-user">
+      <span class="dashicons dashicons-admin-users"></span>
+      Администратор
+    </div>
+  </div>
+
+  <div class="wp-wrap">
+    <aside id="adminmenu">
+      <ul class="wp-menu">
+        <li><a href="#" data-section="dashboard" class="menu-top active">
+          <span class="dashicons dashicons-dashboard"></span>Консоль
+        </a></li>
+        <li><a href="#" data-section="products" class="menu-top">
+          <span class="dashicons dashicons-cart"></span>Товары
+        </a></li>
+        <li><a href="#" data-section="categories" class="menu-top">
+          <span class="dashicons dashicons-category"></span>Категории
+        </a></li>
+        <li class="wp-menu-separator"></li>
+        <li><a href="#" data-section="acf-groups" class="menu-top">
+          <span class="dashicons dashicons-admin-settings"></span>Группы полей
+        </a></li>
+        <li><a href="#" data-section="acf-content" class="menu-top">
+          <span class="dashicons dashicons-edit-page"></span>Контент страниц
+        </a></li>
+        <li class="wp-menu-separator"></li>
+        <li><a href="#" data-section="media" class="menu-top">
+          <span class="dashicons dashicons-admin-media"></span>Медиатека
+        </a></li>
+        <li><a href="#" data-section="features" class="menu-top">
+          <span class="dashicons dashicons-star-filled"></span>Преимущества
+        </a></li>
+        <li><a href="#" data-section="footer" class="menu-top">
+          <span class="dashicons dashicons-admin-links"></span>Подвал
+        </a></li>
+        <li><a href="#" data-section="settings" class="menu-top">
+          <span class="dashicons dashicons-admin-generic"></span>Настройки
+        </a></li>
+      </ul>
     </aside>
-    
-    <main class="main-content">
-      <header class="content-header">
-        <h1 id="page-title">Dashboard</h1>
-        <button id="add-btn" class="btn btn-primary" style="display: none;">Add New</button>
-      </header>
-      
-      <div id="content-area" class="content-area">
-        <!-- Dynamic content will be loaded here -->
+
+    <main id="wpcontent">
+      <div class="wrap">
+        <header class="wp-header">
+          <h1 id="page-title">Консоль</h1>
+          <div id="header-actions"></div>
+        </header>
+        <div id="wp-notices"></div>
+        <div id="content-area"></div>
       </div>
     </main>
   </div>
 
-  <!-- Modal for editing -->
-  <div id="edit-modal" class="modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 id="modal-title">Edit</h2>
-        <button class="modal-close">&times;</button>
+  <div id="edit-modal" class="wp-modal">
+    <div class="wp-modal-backdrop"></div>
+    <div class="wp-modal-dialog">
+      <div class="wp-modal-header">
+        <h2 id="modal-title">Редактировать</h2>
+        <button class="wp-modal-close" type="button">&times;</button>
       </div>
       <form id="edit-form">
-        <div id="modal-body"></div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary modal-cancel">Cancel</button>
-          <button type="submit" class="btn btn-primary">Save</button>
+        <div class="wp-modal-body" id="modal-body"></div>
+        <div class="wp-modal-footer">
+          <button type="button" class="button modal-cancel">Отмена</button>
+          <button type="submit" class="button button-primary">Сохранить</button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- Image upload modal -->
-  <div id="image-modal" class="modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2>Upload Image</h2>
-        <button class="modal-close">&times;</button>
+  <div id="image-modal" class="wp-modal">
+    <div class="wp-modal-backdrop"></div>
+    <div class="wp-modal-dialog">
+      <div class="wp-modal-header">
+        <h2>Загрузить изображение</h2>
+        <button class="wp-modal-close" type="button">&times;</button>
       </div>
-      <form id="image-form">
-        <input type="hidden" name="folder" id="image-folder">
-        <input type="hidden" name="field" id="image-field">
-        <div class="form-group">
-          <label>Select File</label>
-          <input type="file" name="file" accept="image/*" required>
+      <div class="wp-modal-body">
+        <div class="media-upload-area" id="drop-zone">
+          <input type="file" id="image-file-input" accept="image/*" class="file-input-overlay" tabindex="-1">
+          <div id="drop-zone-placeholder">
+            <span class="dashicons dashicons-upload"></span>
+            <p>Перетащите файл или нажмите для выбора</p>
+          </div>
+          <div id="drop-zone-preview" class="drop-zone-preview" hidden>
+            <img id="upload-preview-img" alt="Предпросмотр">
+            <p id="upload-status"></p>
+            <button type="button" class="button button-small" id="change-file-btn">Выбрать другой</button>
+          </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary modal-cancel">Cancel</button>
-          <button type="submit" class="btn btn-primary">Upload</button>
-        </div>
-      </form>
+      </div>
+      <div class="wp-modal-footer">
+        <button type="button" class="button modal-cancel">Отмена</button>
+        <button type="button" class="button button-primary" id="upload-btn" disabled>Загрузить</button>
+      </div>
     </div>
   </div>
 
-  <script src="/admin/app.js"></script>
+  <script type="module" src="/admin/app.js"></script>
 </body>
 </html>

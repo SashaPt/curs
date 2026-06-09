@@ -1,15 +1,37 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { formatPrice as formatCurrency } from "../utils/currency";
 
 const ProductsContext = createContext();
+
+const DEFAULT_CURRENCY = { code: "IDR", symbol: "Rp", locale: "id-ID", decimals: 0 };
 
 export function ProductsProvider({ children }) {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [currency, setCurrency] = useState(DEFAULT_CURRENCY);
 
   useEffect(() => {
+    fetchCurrency();
     fetchProducts();
   }, []);
+
+  const fetchCurrency = async () => {
+    try {
+      const response = await fetch("/api/content/settings/currency");
+      if (response.ok) {
+        const data = await response.json();
+        setCurrency({
+          code: data.code,
+          symbol: data.symbol,
+          locale: data.locale,
+          decimals: data.decimals ?? 0
+        });
+      }
+    } catch {
+      // keep default
+    }
+  };
 
   const fetchProducts = async () => {
     try {
@@ -29,14 +51,25 @@ export function ProductsProvider({ children }) {
       }
       
       const data = JSON.parse(text);
-      
-      // Transform API data to frontend format
+
+      let activeCurrency = currency;
+      try {
+        const curRes = await fetch("/api/content/settings/currency");
+        if (curRes.ok) {
+          const cur = await curRes.json();
+          activeCurrency = { code: cur.code, symbol: cur.symbol, locale: cur.locale, decimals: cur.decimals ?? 0 };
+          setCurrency(activeCurrency);
+        }
+      } catch { /* use current */ }
+
       const transformed = data.map(p => ({
         id: p.id,
         title: p.name,
         subtitle: p.description?.substring(0, 50) || "Quality furniture piece",
-        price: formatPrice(p.price),
-        originalPrice: p.original_price ? formatPrice(p.original_price) : null,
+        price: formatCurrency(p.price, activeCurrency),
+        originalPrice: p.original_price ? formatCurrency(p.original_price, activeCurrency) : null,
+        rawPrice: p.price,
+        rawOriginalPrice: p.original_price,
         category: p.category,
         image: p.image || "/images/products/product-1.png",
         badge: getBadge(p),
@@ -56,10 +89,6 @@ export function ProductsProvider({ children }) {
     } finally {
       setLoading(false);
     }
-  };
-
-  const formatPrice = (price) => {
-    return `Rp ${(price * 15000).toLocaleString('id-ID')}`;
   };
 
   const getBadge = (product) => {
@@ -94,11 +123,14 @@ export function ProductsProvider({ children }) {
       products,
       loading,
       error,
+      currency,
       fetchProducts,
+      fetchCurrency,
       getProductById,
       getProductBySlug,
       getProductsByCategory,
-      getFeaturedProducts
+      getFeaturedProducts,
+      formatPrice: (amount) => formatCurrency(amount, currency)
     }}>
       {children}
     </ProductsContext.Provider>

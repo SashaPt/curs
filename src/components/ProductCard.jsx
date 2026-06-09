@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import ResponsiveImage from "./ResponsiveImage";
 
 export default function ProductCard({ item }) {
   const [isInWishlist, setIsInWishlist] = useState(false);
@@ -20,7 +21,7 @@ export default function ProductCard({ item }) {
   return (
     <article className="product">
       <Link to={`/product/${item.id}`}>
-        <img className="product-img" src={item.image} alt={item.title} />
+        <ResponsiveImage className="product-img" src={item.image} alt={item.title} />
 
         {item.badge && <span className={`badge ${item.badge.kind}`}>{item.badge.label}</span>}
   

@@ -1,5 +1,6 @@
 import express from 'express';
 import { getOne, getAll, run } from '../database.js';
+import { CURRENCIES, getCurrencyFromSettings } from '../utils/currency.js';
 
 const router = express.Router();
 
@@ -81,6 +82,15 @@ router.delete('/products/:id', (req, res) => {
 router.get('/categories', (req, res) => {
   const categories = getAll('SELECT * FROM categories ORDER BY sort_order ASC');
   res.json(categories);
+});
+
+router.get('/categories/id/:id', (req, res) => {
+  const category = getOne('SELECT * FROM categories WHERE id = ?', [req.params.id]);
+  if (category) {
+    res.json(category);
+  } else {
+    res.status(404).json({ error: 'Category not found' });
+  }
 });
 
 router.get('/categories/:slug', (req, res) => {
@@ -245,22 +255,48 @@ router.delete('/footer/:id', (req, res) => {
 });
 
 // Site settings
-router.get('/settings', (req, res) => {
+function getSettingsMap() {
   const settings = getAll('SELECT key, value FROM site_settings');
   const result = {};
-  settings.forEach(s => result[s.key] = s.value);
-  res.json(result);
+  settings.forEach(s => { result[s.key] = s.value; });
+  return result;
+}
+
+router.get('/settings', (req, res) => {
+  res.json(getSettingsMap());
+});
+
+router.get('/settings/currency', (req, res) => {
+  const settings = getSettingsMap();
+  const currency = getCurrencyFromSettings(settings);
+  res.json({ ...currency, currencies: Object.values(CURRENCIES) });
 });
 
 router.post('/settings', (req, res) => {
   const { key, value } = req.body;
-  
+
   run(`
     INSERT OR REPLACE INTO site_settings (key, value, updated_at)
     VALUES (?, ?, CURRENT_TIMESTAMP)
   `, [key, value]);
-  
+
   res.json({ key, value });
+});
+
+router.put('/settings', (req, res) => {
+  const { settings } = req.body;
+  if (!settings || typeof settings !== 'object') {
+    return res.status(400).json({ error: 'settings object required' });
+  }
+
+  Object.entries(settings).forEach(([key, value]) => {
+    run(`
+      INSERT OR REPLACE INTO site_settings (key, value, updated_at)
+      VALUES (?, ?, CURRENT_TIMESTAMP)
+    `, [key, String(value)]);
+  });
+
+  res.json({ success: true, settings: getSettingsMap() });
 });
 
 export default router;
